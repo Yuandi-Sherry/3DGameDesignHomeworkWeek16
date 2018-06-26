@@ -4,17 +4,34 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 
-public class GameManager : NetworkBehaviour
+public class GameController : NetworkBehaviour
 {
-    static public GameManager s_Instance;
+    static public GameController s_Instance;
+    static public List<PlayerController> players = new List<PlayerController>();
+    //static public PlayerController client;
+    /*static private int clientID = 0;
 
+    static public int getClientID() {
+        int tmp = clientID;
+        clientID++;
+        return tmp; 
+    }*/
+    static public void addPlayer(PlayerController player) {
+        Debug.Log("addPlayer" + players.Count);
+        players.Add(player);
+    }
+
+    static public void removePlayer(PlayerController player) {
+        Debug.Log("removePlayer" + players.Count);
+        players.Remove(player);
+    }
     //this is static so tank can be added even withotu the scene loaded (i.e. from lobby)
-    static public List<TankManager> m_Tanks = new List<TankManager>();             // A collection of managers for enabling and disabling different aspects of the tanks.
+    //static public List<PlayerController> m_Tanks = ;             // A collection of managers for enabling and disabling different aspects of the tanks.
 
     //public int m_NumRoundsToWin = 5;          // The number of rounds a single player has to win to win the game.
     //public float m_StartDelay = 3f;           // The delay between the start of RoundStarting and RoundPlaying phases.
     //public float m_EndDelay = 3f;             // The delay between the end of RoundPlaying and RoundEnding phases.
-    public CameraControl m_CameraControl;     // Reference to the CameraControl script for control during different phases.
+    /*public CameraControl m_CameraControl;     // Reference to the CameraControl script for control during different phases.
     public Text m_MessageText;                // Reference to the overlay Text to display winning text, etc.
     public GameObject m_TankPrefab;           // Reference to the prefab the players will control.
 
@@ -22,7 +39,7 @@ public class GameManager : NetworkBehaviour
 
     [HideInInspector]
     [SyncVar]
-    public bool m_GameIsFinished = false;
+    public bool m_GameIsFinished = false;*/
 
     //Various UI references to hide the screen between rounds.
     // [Space]
@@ -33,10 +50,10 @@ public class GameManager : NetworkBehaviour
     //private int m_RoundNumber;                  // Which round the game is currently on.
     //private WaitForSeconds m_StartWait;         // Used to have a delay whilst the round starts.
     //private WaitForSeconds m_EndWait;           // Used to have a delay whilst the round or game ends.
-    //private TankManager m_RoundWinner;          // Reference to the winner of the current round.  Used to make an announcement of who won.
-    //private TankManager m_GameWinner;           // Reference to the winner of the game.  Used to make an announcement of who won.
+    //private PlayerController m_RoundWinner;          // Reference to the winner of the current round.  Used to make an announcement of who won.
+    //private PlayerController m_GameWinner;           // Reference to the winner of the game.  Used to make an announcement of who won.
 
-    void Awake()
+    /*void Awake()
     {
         s_Instance = this;
     }
@@ -60,22 +77,19 @@ public class GameManager : NetworkBehaviour
     /// <param name="c">The color of the player, choosen in the lobby</param>
     /// <param name="name">The name of the Player, choosen in the lobby</param>
     /// <param name="localID">The localID. e.g. if 2 player are on the same machine this will be 1 & 2</param>
-    /*static public void AddTank(GameObject tank, int playerNum, Color c, string name, int localID)
+    static public void AddTank(GameObject tank/*, Color c, int localID)
     {
-        TankManager tmp = new TankManager();
-        tmp.m_Instance = tank;
-        tmp.m_PlayerNumber = playerNum;
-        tmp.m_PlayerColor = c;
-        tmp.m_PlayerName = name;
-        tmp.m_LocalPlayerID = localID;
-        tmp.Setup();
+        PlayerController tmp = new PlayerController();
+        //tmp.m_Instance = tank;
+        //tmp.m_PlayerColor = c;
+        // tmp.Setup();
 
         m_Tanks.Add(tmp);
-    }
+    }*/
 
-    public void RemoveTank(GameObject tank)
+    /*public void RemoveTank(GameObject tank)
     {
-        TankManager toRemove = null;
+        PlayerController toRemove = null;
         foreach (var tmp in m_Tanks)
         {
             if (tmp.m_Instance == tank)
@@ -197,9 +211,9 @@ public class GameManager : NetworkBehaviour
 
             yield return null;
         }
-    }
+    }*/
 
-    private IEnumerator RoundPlaying()
+    /*private IEnumerator RoundPlaying()
     {
         //notify clients that the round is now started, they should allow player to move.
         RpcRoundPlaying();
@@ -220,9 +234,9 @@ public class GameManager : NetworkBehaviour
 
         // Clear the text from the screen.
         m_MessageText.text = string.Empty;
-    }
+    }*/
 
-    private IEnumerator RoundEnding()
+    /*private IEnumerator RoundEnding()
     {
         // Clear the winner from the previous round.
         m_RoundWinner = null;
@@ -270,10 +284,10 @@ public class GameManager : NetworkBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-    }
+    }*/
 
     // This is used to check if there is one or fewer tanks remaining and thus the round should end.
-    private bool OneTankLeft()
+    /*private bool OneTankLeft()
     {
         // Start the count of tanks left at zero.
         int numTanksLeft = 0;
@@ -288,12 +302,12 @@ public class GameManager : NetworkBehaviour
 
         // If there are one or fewer tanks remaining return true, otherwise return false.
         return numTanksLeft <= 1;
-    }
+    }*/
 
 
     // This function is to find out if there is a winner of the round.
     // This function is called with the assumption that 1 or fewer tanks are currently active.
-    private TankManager GetRoundWinner()
+    /*private PlayerController GetRoundWinner()
     {
         // Go through all the tanks...
         for (int i = 0; i < m_Tanks.Count; i++)
@@ -305,11 +319,11 @@ public class GameManager : NetworkBehaviour
 
         // If none of the tanks are active it is a draw so return null.
         return null;
-    }
+    }*/
 
 
     // This function is to find out if there is a winner of the game.
-    private TankManager GetGameWinner()
+    /*private PlayerController GetGameWinner()
     {
         int maxScore = 0;
 

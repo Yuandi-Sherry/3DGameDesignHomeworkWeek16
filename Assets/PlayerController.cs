@@ -5,20 +5,45 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 
 public class PlayerController : NetworkBehaviour {
-
+    public GameObject tankPrefab;
 	public GameObject bulletPrefab;
-	private float speed;
+	private float speed = 10.0f;
 	private float x;
 	private float z;
+    //private int id;
 	// Use this for initialization
-	void Start () {
-		speed = 10.0f;
-	}
-	
+	/*void Start () {
+		
+	}*/
+	public override void OnStartClient() {
+        Debug.Log("client is started");
+        base.OnStartClient();
+        GameController.addPlayer(this);
+        //Debug.Log("ClientID: " + id);
+        speed = 10.0f;
+        if (!isServer) //if not hosting, we had the tank to the gamemanger for easy access!
+            GameController.addPlayer(this);
+    }
+
+    public override void OnNetworkDestroy() {
+        if (!isServer) //if not hosting, we had the tank to the gamemanger for easy access!
+            GameController.removePlayer(this);
+    }
+    /*public override void OnStartHost()
+    {
+        Debug.Log("host is started");
+        base.OnStartHost();
+        GameController.host = this;
+        /*speed = 10.0f;
+        if (!isServer) //if not hosting, we had the tank to the gamemanger for easy access!
+            GameController.AddTank(tankPrefab);
+    }*/
+
 	// Update is called once per frame
 	void Update()
     {
-        if (!isLocalPlayer)
+
+        if (!isLocalPlayer) 
             return;
 
         if(Input.GetKey(KeyCode.W)) {
@@ -33,7 +58,7 @@ public class PlayerController : NetworkBehaviour {
             this.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
         if(Input.GetKey(KeyCode.A)) {
-        	float x = this.gameObject.transform.localEulerAngles.y + speed;
+        	float x = this.gameObject.transform.localEulerAngles.y + speed*0.4f;
 			float y = this.gameObject.transform.localEulerAngles.x;
 			this.gameObject.transform.localEulerAngles = new Vector3(y,x,0);
         }

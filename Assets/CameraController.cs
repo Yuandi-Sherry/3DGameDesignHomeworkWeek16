@@ -10,7 +10,7 @@ public class CameraController : MonoBehaviour {
 
 	void OnPlayerConnected(NetworkPlayer player) {
 		int playerID = int.Parse(player.ToString());
-		Debug.Log(playerID);
+		Debug.Log("OnPlayerConnected");
 		/*offset = transform.position - player.transform.position;
 
         Debug.Log(offset);*/
@@ -18,6 +18,8 @@ public class CameraController : MonoBehaviour {
 
 	// Update is called once per frame
 	void LateUpdate () {
+		int playerID = int.Parse(player.ToString());
+		//Debug.Log(playerID);
 		//transform.position = player.transform.position + offset;
 	}
 }
